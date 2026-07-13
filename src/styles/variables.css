@@ -1,0 +1,53 @@
+:root {
+    /* ===============================
+       COLORS
+    =============================== */
+
+    --primary-color: #111827;
+    --secondary-color: #C9A227;
+
+    --success-color: #198754;
+    --danger-color: #DC3545;
+    --warning-color: #FFC107;
+    --info-color: #0DCAF0;
+
+    --background-color: #F5F6FA;
+    --surface-color: #FFFFFF;
+
+    --text-color: #1F2937;
+    --text-light: #6B7280;
+
+    --border-color: #E5E7EB;
+
+    /* ===============================
+       FONTS
+    =============================== */
+
+    --heading-font: "Poppins", sans-serif;
+    --body-font: "Inter", sans-serif;
+
+    /* ===============================
+       BORDER RADIUS
+    =============================== */
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+
+    /* ===============================
+       SHADOWS
+    =============================== */
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,.08);
+
+    --shadow-md: 0 8px 20px rgba(0,0,0,.10);
+
+    --shadow-lg: 0 15px 40px rgba(0,0,0,.15);
+
+    /* ===============================
+       TRANSITIONS
+    =============================== */
+
+    --transition: all .3s ease;
+}
