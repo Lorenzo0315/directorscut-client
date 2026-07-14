@@ -1,5 +1,8 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
+import { FaCheckCircle } from "react-icons/fa";
+
 import SectionTitle from "../ui/SectionTitle";
+import aboutImage from "../../assets/images/about.png";
 
 function AboutSection() {
     return (
@@ -8,57 +11,85 @@ function AboutSection() {
 
                 <SectionTitle
                     title="About Director's Cut"
-                    subtitle="Where style meets precision and every haircut is crafted with excellence."
+                    subtitle="Where style meets precision, professionalism, and premium grooming."
                     center
                 />
 
                 <Row className="align-items-center g-5">
 
                     <Col lg={6}>
-                        <img
-                            src="https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900"
-                            alt="Barber Shop"
-                            className="about-image"
-                        />
+                        <div className="about-image-wrapper">
+                            <img
+                                src={aboutImage}
+                                alt="Director's Cut Barber Shop"
+                                className="about-image"
+                            />
+                        </div>
                     </Col>
 
                     <Col lg={6}>
 
-                        <h3 className="about-heading">
-                            Premium Grooming Experience
-                        </h3>
+                        <span className="section-badge">
+                            Premium Barber Shop
+                        </span>
+
+                        <h2 className="about-heading">
+                            We Deliver More Than Just Haircuts
+                        </h2>
 
                         <p className="about-text">
-                            Director's Cut Barber Shop is dedicated to providing
-                            exceptional grooming services with skilled barbers,
-                            modern equipment, and outstanding customer service.
+                            At Director's Cut, we believe every haircut should
+                            leave you feeling confident. Our skilled barbers
+                            combine modern techniques with classic barbering
+                            traditions to give every client a premium grooming
+                            experience.
                         </p>
 
-                        <p className="about-text">
-                            Whether you're looking for a classic haircut, beard
-                            styling, hair coloring, or a complete makeover, our
-                            experienced team ensures every client leaves looking
-                            and feeling their best.
-                        </p>
+                        <div className="about-features">
+
+                            <div className="about-feature">
+                                <FaCheckCircle className="feature-icon" />
+                                <span>Professional & Experienced Barbers</span>
+                            </div>
+
+                            <div className="about-feature">
+                                <FaCheckCircle className="feature-icon" />
+                                <span>Modern Equipment & Premium Products</span>
+                            </div>
+
+                            <div className="about-feature">
+                                <FaCheckCircle className="feature-icon" />
+                                <span>Comfortable & Relaxing Environment</span>
+                            </div>
+
+                        </div>
 
                         <div className="about-stats">
 
                             <div className="about-stat">
-                                <h2>10+</h2>
-                                <span>Years Experience</span>
+                                <h3>10+</h3>
+                                <p>Years Experience</p>
                             </div>
 
                             <div className="about-stat">
-                                <h2>5K+</h2>
-                                <span>Happy Clients</span>
+                                <h3>5K+</h3>
+                                <p>Happy Clients</p>
                             </div>
 
                             <div className="about-stat">
-                                <h2>15+</h2>
-                                <span>Professional Barbers</span>
+                                <h3>15+</h3>
+                                <p>Expert Barbers</p>
                             </div>
 
                         </div>
+
+                        <Button
+                            variant="warning"
+                            size="lg"
+                            className="mt-4 px-4"
+                        >
+                            Learn More
+                        </Button>
 
                     </Col>
 

@@ -1,0 +1,42 @@
+.why-section{
+    background:#f8f9fa;
+}
+
+.feature-card{
+    background:#fff;
+    padding:35px 30px;
+    border-radius:18px;
+    text-align:center;
+    height:100%;
+    transition:.35s;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.feature-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 18px 40px rgba(0,0,0,.15);
+}
+
+.feature-icon{
+    width:80px;
+    height:80px;
+    margin:0 auto 25px;
+    border-radius:50%;
+    background:#d4af37;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:32px;
+    color:#fff;
+}
+
+.feature-card h4{
+    font-weight:700;
+    margin-bottom:15px;
+    color:#1f2937;
+}
+
+.feature-card p{
+    color:#6b7280;
+    line-height:1.7;
+}

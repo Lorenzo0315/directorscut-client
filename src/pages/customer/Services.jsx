@@ -1,36 +1,80 @@
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+
+import { getServices } from "../../services/serviceService";
+
+import LoadingSpinner from "../../components/ui/LoadingSpinner";
+import ServiceGrid from "../../components/customer/services/ServiceGrid";
+import ServiceSearch from "../../components/customer/services/ServiceSearch";
+import ServiceEmpty from "../../components/customer/services/ServiceEmpty";
 
 function Services() {
+
+    const [services, setServices] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState("");
+
+    useEffect(() => {
+
+        const fetchServices = async () => {
+
+            try {
+
+                const data = await getServices();
+
+                setServices(data);
+
+            } catch (error) {
+
+                console.error(error);
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
+
+        fetchServices();
+
+    }, []);
+
+    const filteredServices = services.filter(service =>
+        service.serviceName
+            .toLowerCase()
+            .includes(search.toLowerCase())
+    );
+
     return (
-        <Container>
+        <Container className="py-5">
 
-            <h2 className="page-title">
-                Services
-            </h2>
+            <h1 className="fw-bold mb-3">
+                Our Services
+            </h1>
 
-            <Row className="g-4">
+            <p className="text-muted mb-4">
+                Choose the grooming service that's right for you.
+            </p>
 
-                <Col md={4}>
-                    <Card>
-                        <Card.Body>
-                            <h5>Haircut</h5>
-                            <p>₱200</p>
-                            <p>30 Minutes</p>
-                        </Card.Body>
-                    </Card>
-                </Col>
+            <ServiceSearch
+                search={search}
+                setSearch={setSearch}
+            />
 
-                <Col md={4}>
-                    <Card>
-                        <Card.Body>
-                            <h5>Beard Trim</h5>
-                            <p>₱150</p>
-                            <p>20 Minutes</p>
-                        </Card.Body>
-                    </Card>
-                </Col>
+            {loading ? (
 
-            </Row>
+                <LoadingSpinner />
+
+            ) : filteredServices.length === 0 ? (
+
+                <ServiceEmpty />
+
+            ) : (
+
+                <ServiceGrid services={filteredServices} />
+
+            )}
 
         </Container>
     );
