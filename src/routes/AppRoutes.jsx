@@ -1,9 +1,14 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// Route Protection
+import ProtectedRoute from "../components/auth/ProtectedRoute";
+import CustomerRoute from "../components/auth/CustomerRoute";
+import AdminRoute from "../components/auth/AdminRoute";
+
 // Layouts
 import AuthLayout from "../layouts/AuthLayout";
 import CustomerLayout from "../layouts/CustomerLayout";
-import StaffLayout from "../layouts/StaffLayout";
+import AdminLayout from "../layouts/AdminLayout";
 
 // Authentication
 import Login from "../pages/auth/Login";
@@ -17,45 +22,117 @@ import BookAppointment from "../pages/customer/BookAppointment";
 import MyAppointments from "../pages/customer/MyAppointments";
 import MyPayments from "../pages/customer/MyPayments";
 
-// Staff Pages
-import Dashboard from "../pages/staff/Dashboard";
-import ManageBarbers from "../pages/staff/ManageBarbers";
-import ManageServices from "../pages/staff/ManageServices";
-import ManageAppointments from "../pages/staff/ManageAppointments";
-import ManagePayments from "../pages/staff/ManagePayments";
-import Reports from "../pages/staff/Reports";
+// Admin Pages
+import Dashboard from "../pages/admin/Dashboard";
+import ManageBarbers from "../pages/admin/ManageBarbers";
+import ManageServices from "../pages/admin/ManageServices";
+import ManageAppointments from "../pages/admin/ManageAppointments";
+import ManagePayments from "../pages/admin/ManagePayments";
+import Reports from "../pages/admin/Reports";
 
 function AppRoutes() {
     return (
         <Routes>
 
             {/* Redirect */}
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route
+                path="/"
+                element={<Navigate to="/login" replace />}
+            />
 
             {/* Authentication */}
             <Route element={<AuthLayout />}>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
             </Route>
 
-            {/* Customer */}
-            <Route element={<CustomerLayout />}>
-                <Route path="/home" element={<Home />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/barbers" element={<Barbers />} />
-                <Route path="/book-appointment" element={<BookAppointment />} />
-                <Route path="/my-appointments" element={<MyAppointments />} />
-                <Route path="/my-payments" element={<MyPayments />} />
+            {/* Customer Routes */}
+            <Route
+                element={
+                    <ProtectedRoute>
+                        <CustomerRoute>
+                            <CustomerLayout />
+                        </CustomerRoute>
+                    </ProtectedRoute>
+                }
+            >
+                <Route
+                    path="/home"
+                    element={<Home />}
+                />
+
+                <Route
+                    path="/services"
+                    element={<Services />}
+                />
+
+                <Route
+                    path="/barbers"
+                    element={<Barbers />}
+                />
+
+                <Route
+                    path="/book-appointment"
+                    element={<BookAppointment />}
+                />
+
+                <Route
+                    path="/my-appointments"
+                    element={<MyAppointments />}
+                />
+
+                <Route
+                    path="/my-payments"
+                    element={<MyPayments />}
+                />
             </Route>
 
-            {/* Staff */}
-            <Route element={<StaffLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/manage-barbers" element={<ManageBarbers />} />
-                <Route path="/manage-services" element={<ManageServices />} />
-                <Route path="/manage-appointments" element={<ManageAppointments />} />
-                <Route path="/manage-payments" element={<ManagePayments />} />
-                <Route path="/reports" element={<Reports />} />
+            {/* Admin Routes */}
+            <Route
+                element={
+                    <ProtectedRoute>
+                        <AdminRoute>
+                            <AdminLayout />
+                        </AdminRoute>
+                    </ProtectedRoute>
+                }
+            >
+                <Route
+                    path="/dashboard"
+                    element={<Dashboard />}
+                />
+
+                <Route
+                    path="/manage-barbers"
+                    element={<ManageBarbers />}
+                />
+
+                <Route
+                    path="/manage-services"
+                    element={<ManageServices />}
+                />
+
+                <Route
+                    path="/manage-appointments"
+                    element={<ManageAppointments />}
+                />
+
+                <Route
+                    path="/manage-payments"
+                    element={<ManagePayments />}
+                />
+
+                <Route
+                    path="/reports"
+                    element={<Reports />}
+                />
             </Route>
 
             {/* 404 */}

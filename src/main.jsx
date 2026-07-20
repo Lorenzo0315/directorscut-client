@@ -12,6 +12,14 @@ import "./styles/customer.css";
 import "./styles/about.css";
 import "./styles/featured-services.css";
 import "./styles/why-choose.css";
+import "./styles/testimonials.css";
+import "./styles/cta.css";
+import "./styles/footer.css";
+import "./styles/services-page.css";
+import "./styles/barbers-page.css";
+import "./styles/book-appointment.css";
+import "./styles/my-appointments.css";
+import "./styles/admin-dashboard.css";
 
 import "./styles/auth.css";
 import "./styles/staff.css";

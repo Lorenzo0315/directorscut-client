@@ -1,0 +1,182 @@
+/* ==========================
+   ADMIN LAYOUT
+========================== */
+
+.admin-layout{
+    display:flex;
+    min-height:100vh;
+    background:#f5f6fa;
+}
+
+/* ==========================
+   SIDEBAR
+========================== */
+
+.admin-sidebar{
+    width:260px;
+    background:#111827;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    padding:25px 0;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+}
+
+.sidebar-logo{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.sidebar-logo h3{
+    color:#d4af37;
+    font-weight:700;
+}
+
+.sidebar-logo p{
+    color:#aaa;
+    font-size:.9rem;
+}
+
+.admin-sidebar nav{
+    display:flex;
+    flex-direction:column;
+}
+
+.admin-sidebar nav a{
+    color:white;
+    text-decoration:none;
+    padding:15px 30px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    transition:.3s;
+}
+
+.admin-sidebar nav a:hover{
+    background:#d4af37;
+    color:#111827;
+}
+
+.admin-sidebar nav a.active{
+    background:#d4af37;
+    color:#111827;
+}
+
+.logout-btn{
+    margin:20px;
+    border:none;
+    background:#dc3545;
+    color:white;
+    padding:12px;
+    border-radius:10px;
+    transition:.3s;
+}
+
+.logout-btn:hover{
+    background:#bb2d3b;
+}
+
+/* ==========================
+   MAIN CONTENT
+========================== */
+
+.admin-main{
+    margin-left:260px;
+    width:calc(100% - 260px);
+    min-height:100vh;
+    background:#f5f6fa;
+}
+
+.admin-content{
+    padding:30px;
+}
+
+/* ==========================
+   TOPBAR
+========================== */
+
+.admin-topbar{
+    height:75px;
+    background:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 30px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+
+.admin-topbar h3{
+    margin:0;
+    font-weight:700;
+    color:#111827;
+}
+
+.admin-profile{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.admin-avatar{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:#d4af37;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-weight:bold;
+}
+
+.admin-topbar small{
+    color:#6b7280;
+}
+
+.admin-profile strong{
+    color:#111827;
+}
+
+.admin-profile small{
+    color:#6b7280;
+}
+
+.admin-profile svg{
+    transition:.3s;
+}
+
+.admin-profile svg:hover{
+    color:#d4af37;
+}
+
+/* ==========================
+   DASHBOARD CARDS
+========================== */
+
+.dashboard-card{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+}
+
+.dashboard-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 35px rgba(0,0,0,.12);
+}
+
+.dashboard-card h6{
+    color:#6b7280;
+    font-size:.9rem;
+    margin-bottom:15px;
+}
+
+.dashboard-card h2{
+    color:#111827;
+    font-weight:700;
+    margin:0;
+}

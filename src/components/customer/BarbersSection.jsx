@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
 
-import { getAllBarbers } from "../../services/barberService";
+import { getBarbers } from "../../services/barberService";
 
 import barber1 from "../../assets/images/barber1.png";
 import barber2 from "../../assets/images/barber2.png";
@@ -17,10 +17,10 @@ function BarbersSection() {
 
     const loadBarbers = async () => {
         try {
-            const data = await getAllBarbers();
+            const data = await getBarbers();
             setBarbers(data);
         } catch (error) {
-            console.error(error);
+            console.error("Failed to load barbers:", error);
         }
     };
 
@@ -81,11 +81,7 @@ function BarbersSection() {
                                     </p>
 
                                     <Badge
-                                        bg={
-                                            barber.isAvailable
-                                                ? "success"
-                                                : "secondary"
-                                        }
+                                        bg={barber.isAvailable ? "success" : "secondary"}
                                         className="mb-3"
                                     >
                                         {barber.isAvailable
@@ -93,14 +89,12 @@ function BarbersSection() {
                                             : "Unavailable"}
                                     </Badge>
 
-                                    <div>
-                                        <Button
-                                            variant="warning"
-                                            className="w-100"
-                                        >
-                                            Book Appointment
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        variant="warning"
+                                        className="w-100"
+                                    >
+                                        Book Appointment
+                                    </Button>
 
                                 </Card.Body>
 

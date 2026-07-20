@@ -1,0 +1,60 @@
+.barbers-hero{
+    background:
+    linear-gradient(rgba(31,41,55,.88),rgba(31,41,55,.88)),
+    url("../assets/images/hero.jpg");
+
+    background-size:cover;
+    background-position:center;
+    color:white;
+    text-align:center;
+    padding:100px 0;
+}
+
+.barbers-hero h1{
+    font-size:3rem;
+    font-weight:700;
+}
+
+.barbers-hero p{
+    max-width:700px;
+    margin:20px auto 0;
+    color:#ddd;
+}
+
+.barber-search{
+    border-radius:50px;
+    padding:14px;
+}
+
+.barber-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    transition:.35s;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.barber-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 18px 45px rgba(0,0,0,.15);
+}
+
+.barber-image{
+    height:320px;
+    object-fit:cover;
+}
+
+.barber-card h4{
+    margin-top:10px;
+    font-weight:700;
+}
+
+.specialization{
+    color:#6b7280;
+    margin-bottom:20px;
+}
+
+.availability-badge{
+    padding:10px 16px;
+    font-size:.9rem;
+}

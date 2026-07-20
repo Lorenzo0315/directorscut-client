@@ -1,20 +1,24 @@
 import { Outlet } from "react-router-dom";
-import CustomerNavbar from "../components/layout/CustomerNavbar";
-import Footer from "../components/common/Footer";
 
 function CustomerLayout() {
+    console.log("CustomerLayout rendered");
+
     return (
-        <div className="d-flex flex-column min-vh-100">
+        <>
+            <div
+                style={{
+                    background: "red",
+                    color: "white",
+                    padding: "20px",
+                    fontSize: "30px",
+                    textAlign: "center"
+                }}
+            >
+                CUSTOMER LAYOUT
+            </div>
 
-            <CustomerNavbar />
-
-            <main className="container py-4 flex-grow-1">
-                <Outlet />
-            </main>
-
-            <Footer />
-
-        </div>
+            <Outlet />
+        </>
     );
 }
 

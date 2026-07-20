@@ -1,0 +1,75 @@
+.services-hero{
+    background:linear-gradient(rgba(31,41,55,.85),rgba(31,41,55,.85)),
+    url("../assets/images/hero.jpg");
+    background-size:cover;
+    background-position:center;
+    color:#fff;
+    padding:100px 0;
+    text-align:center;
+}
+
+.services-hero h1{
+    font-size:3rem;
+    font-weight:700;
+}
+
+.services-hero p{
+    max-width:700px;
+    margin:20px auto 0;
+    color:#ddd;
+}
+
+.service-search{
+    padding:14px;
+    border-radius:50px;
+    font-size:1rem;
+}
+
+.service-page-card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    transition:.35s;
+    box-shadow:0 12px 30px rgba(0,0,0,.08);
+}
+
+.service-page-card:hover{
+    transform:translateY(-10px);
+    box-shadow:0 18px 45px rgba(0,0,0,.15);
+}
+
+.service-page-image{
+    height:240px;
+    object-fit:cover;
+}
+
+.service-page-card h4{
+    margin-bottom:15px;
+    font-weight:700;
+}
+
+.service-page-card p{
+    color:#6b7280;
+    min-height:70px;
+}
+
+.service-badges{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.price-badge{
+    background:#d4af37;
+    color:#fff;
+    padding:8px 16px;
+    border-radius:30px;
+    font-weight:600;
+}
+
+.duration-badge{
+    background:#1f2937;
+    color:#fff;
+    padding:8px 16px;
+    border-radius:30px;
+}

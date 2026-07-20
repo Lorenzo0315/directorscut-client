@@ -29,14 +29,26 @@ function Login() {
         try {
             const result = await login(formData);
 
+            // Save JWT token
             localStorage.setItem("token", result.token);
-            localStorage.setItem("role", result.role);
 
-            if (result.role === "Staff") {
+            // Save logged in user
+            localStorage.setItem(
+                "user",
+                JSON.stringify({
+                    fullName: result.fullName,
+                    email: result.email,
+                    role: result.role,
+                })
+            );
+
+            // Redirect based on role
+            if (result.role === "Admin") {
                 navigate("/dashboard");
             } else {
                 navigate("/home");
             }
+
         } catch (err) {
             setError(
                 err.response?.data?.message ||

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { getServices } from "../../services/serviceService";
+import { getAllServices } from "../../services/serviceService";
 
 import haircut from "../../assets/images/haircut.jpg";
 import beard from "../../assets/images/beard.jpg";
@@ -19,7 +19,7 @@ function FeaturedServices() {
 
     const loadServices = async () => {
         try {
-            const data = await getServices();
+            const data = await getAllServices();
 
             // Show only the first 4 services
             setServices(data.slice(0, 4));
