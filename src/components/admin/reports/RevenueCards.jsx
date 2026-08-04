@@ -8,23 +8,25 @@ function RevenueCards({ revenue }) {
 
     if (!revenue) return null;
 
+    const summary = revenue.revenueSummary ?? {};
+
     return (
 
         <Row>
 
-            <Col lg={3} md={6} className="mb-4">
+            <Col lg={2} md={4} sm={6} className="mb-4">
 
-                <Card className="shadow-sm border-0">
+                <Card className="shadow-sm border-0 h-100">
 
                     <Card.Body>
 
                         <h6 className="text-muted">
-                            Today's Revenue
+                            Today
                         </h6>
 
-                        <h3 className="fw-bold text-success">
-                            ₱ {revenue.todayRevenue.toLocaleString()}
-                        </h3>
+                        <h4 className="fw-bold text-success">
+                            ₱ {(summary.todayRevenue ?? 0).toLocaleString()}
+                        </h4>
 
                     </Card.Body>
 
@@ -32,9 +34,9 @@ function RevenueCards({ revenue }) {
 
             </Col>
 
-            <Col lg={3} md={6} className="mb-4">
+            <Col lg={2} md={4} sm={6} className="mb-4">
 
-                <Card className="shadow-sm border-0">
+                <Card className="shadow-sm border-0 h-100">
 
                     <Card.Body>
 
@@ -42,9 +44,9 @@ function RevenueCards({ revenue }) {
                             This Week
                         </h6>
 
-                        <h3 className="fw-bold text-primary">
-                            ₱ {revenue.thisWeekRevenue.toLocaleString()}
-                        </h3>
+                        <h4 className="fw-bold text-primary">
+                            ₱ {(summary.thisWeekRevenue ?? 0).toLocaleString()}
+                        </h4>
 
                     </Card.Body>
 
@@ -52,9 +54,9 @@ function RevenueCards({ revenue }) {
 
             </Col>
 
-            <Col lg={3} md={6} className="mb-4">
+            <Col lg={2} md={4} sm={6} className="mb-4">
 
-                <Card className="shadow-sm border-0">
+                <Card className="shadow-sm border-0 h-100">
 
                     <Card.Body>
 
@@ -62,9 +64,9 @@ function RevenueCards({ revenue }) {
                             This Month
                         </h6>
 
-                        <h3 className="fw-bold text-warning">
-                            ₱ {revenue.thisMonthRevenue.toLocaleString()}
-                        </h3>
+                        <h4 className="fw-bold text-warning">
+                            ₱ {(summary.thisMonthRevenue ?? 0).toLocaleString()}
+                        </h4>
 
                     </Card.Body>
 
@@ -72,9 +74,9 @@ function RevenueCards({ revenue }) {
 
             </Col>
 
-            <Col lg={3} md={6} className="mb-4">
+            <Col lg={2} md={4} sm={6} className="mb-4">
 
-                <Card className="shadow-sm border-0">
+                <Card className="shadow-sm border-0 h-100">
 
                     <Card.Body>
 
@@ -82,9 +84,69 @@ function RevenueCards({ revenue }) {
                             This Year
                         </h6>
 
-                        <h3 className="fw-bold text-danger">
-                            ₱ {revenue.thisYearRevenue.toLocaleString()}
-                        </h3>
+                        <h4 className="fw-bold text-danger">
+                            ₱ {(summary.thisYearRevenue ?? 0).toLocaleString()}
+                        </h4>
+
+                    </Card.Body>
+
+                </Card>
+
+            </Col>
+
+            <Col lg={2} md={4} sm={6} className="mb-4">
+
+                <Card className="shadow-sm border-0 h-100">
+
+                    <Card.Body>
+
+                        <h6 className="text-muted">
+                            Total Revenue
+                        </h6>
+
+                        <h4 className="fw-bold text-dark">
+                            ₱ {(summary.totalRevenue ?? 0).toLocaleString()}
+                        </h4>
+
+                    </Card.Body>
+
+                </Card>
+
+            </Col>
+
+            <Col lg={2} md={4} sm={6} className="mb-4">
+
+                <Card className="shadow-sm border-0 h-100">
+
+                    <Card.Body>
+
+                        <h6 className="text-muted">
+                            Total Appointments
+                        </h6>
+
+                        <h4 className="fw-bold text-info">
+                            {(revenue.totalAppointments ?? 0).toLocaleString()}
+                        </h4>
+
+                    </Card.Body>
+
+                </Card>
+
+            </Col>
+
+            <Col lg={2} md={4} sm={6} className="mb-4">
+
+                <Card className="shadow-sm border-0 h-100">
+
+                    <Card.Body>
+
+                        <h6 className="text-muted">
+                            Total Customers
+                        </h6>
+
+                        <h4 className="fw-bold text-secondary">
+                            {(revenue.totalCustomers ?? 0).toLocaleString()}
+                        </h4>
 
                     </Card.Body>
 

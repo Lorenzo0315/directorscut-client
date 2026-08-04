@@ -38,9 +38,13 @@ function ManagePayments() {
 
         try {
 
+            setLoading(true);
+
             const data = await getAllPayments();
 
             setPayments(data);
+
+            setError("");
 
         }
         catch (err) {
@@ -70,14 +74,17 @@ function ManagePayments() {
             setShowModal(false);
             setSelectedPayment(null);
 
-            loadPayments();
+            await loadPayments();
 
         }
         catch (err) {
 
             console.error(err);
 
-            alert("Failed to update payment.");
+            alert(
+                err.response?.data?.message ||
+                "Failed to update payment."
+            );
 
         }
 
@@ -92,14 +99,17 @@ function ManagePayments() {
 
             await deletePayment(id);
 
-            loadPayments();
+            await loadPayments();
 
         }
         catch (err) {
 
             console.error(err);
 
-            alert("Failed to delete payment.");
+            alert(
+                err.response?.data?.message ||
+                "Failed to delete payment."
+            );
 
         }
 
@@ -107,22 +117,26 @@ function ManagePayments() {
 
     const paymentBadge = (status) => {
 
-        switch (status) {
+        switch (status?.toLowerCase()) {
 
-            case "Pending":
-                return <Badge bg="warning">{status}</Badge>;
+            case "pending":
+                return <Badge bg="warning">Pending</Badge>;
 
-            case "Paid":
-                return <Badge bg="success">{status}</Badge>;
+            case "paid":
+                return <Badge bg="success">Paid</Badge>;
 
-            case "Refunded":
-                return <Badge bg="info">{status}</Badge>;
+            case "refunded":
+                return <Badge bg="info">Refunded</Badge>;
 
-            case "Failed":
-                return <Badge bg="danger">{status}</Badge>;
+            case "failed":
+                return <Badge bg="danger">Failed</Badge>;
 
             default:
-                return <Badge bg="secondary">{status}</Badge>;
+                return (
+                    <Badge bg="secondary">
+                        {status}
+                    </Badge>
+                );
 
         }
 
@@ -131,9 +145,16 @@ function ManagePayments() {
     if (loading) {
 
         return (
+
             <div className="text-center mt-5">
-                <Spinner animation="border" />
+
+                <Spinner
+                    animation="border"
+                    variant="warning"
+                />
+
             </div>
+
         );
 
     }
@@ -147,9 +168,11 @@ function ManagePayments() {
             </h2>
 
             {error && (
+
                 <Alert variant="danger">
                     {error}
                 </Alert>
+
             )}
 
             <Card className="shadow-sm">
@@ -169,7 +192,7 @@ function ManagePayments() {
                                 <th>Amount</th>
                                 <th>Method</th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th>Payment Date</th>
                                 <th width="150">
                                     Actions
                                 </th>
@@ -188,7 +211,9 @@ function ManagePayments() {
                                         colSpan="9"
                                         className="text-center"
                                     >
+
                                         No payments found.
+
                                     </td>
 
                                 </tr>
@@ -201,14 +226,20 @@ function ManagePayments() {
 
                                     <td>{index + 1}</td>
 
-                                    <td>{payment.customerName}</td>
-
-                                    <td>{payment.barberName}</td>
-
-                                    <td>{payment.serviceName}</td>
+                                    <td>
+                                        {payment.customerName}
+                                    </td>
 
                                     <td>
-                                        ₱ {payment.amount}
+                                        {payment.barberName}
+                                    </td>
+
+                                    <td>
+                                        {payment.serviceName}
+                                    </td>
+
+                                    <td>
+                                        ₱{Number(payment.amount).toFixed(2)}
                                     </td>
 
                                     <td>
@@ -216,13 +247,17 @@ function ManagePayments() {
                                     </td>
 
                                     <td>
-                                        {paymentBadge(payment.paymentStatus)}
+                                        {paymentBadge(
+                                            payment.paymentStatus
+                                        )}
                                     </td>
 
                                     <td>
+
                                         {new Date(
                                             payment.paymentDate
-                                        ).toLocaleDateString()}
+                                        ).toLocaleString()}
+
                                     </td>
 
                                     <td>
@@ -231,6 +266,9 @@ function ManagePayments() {
                                             size="sm"
                                             variant="primary"
                                             className="me-2"
+                                            disabled={
+                                                payment.paymentStatus?.toLowerCase() === "paid"
+                                            }
                                             onClick={() => {
 
                                                 setSelectedPayment(payment);
@@ -248,7 +286,9 @@ function ManagePayments() {
                                             size="sm"
                                             variant="danger"
                                             onClick={() =>
-                                                removePayment(payment.paymentId)
+                                                removePayment(
+                                                    payment.paymentId
+                                                )
                                             }
                                         >
 

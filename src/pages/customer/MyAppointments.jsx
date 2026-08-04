@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Container,
     Row,
@@ -17,8 +18,13 @@ import {
 
 function MyAppointments() {
 
+    const navigate = useNavigate();
+
     const [appointments, setAppointments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [success, setSuccess] = useState("");
+    const [error, setError] = useState("");
+    const [cancellingId, setCancellingId] = useState(null);
 
     useEffect(() => {
         loadAppointments();
@@ -28,14 +34,23 @@ function MyAppointments() {
 
         try {
 
+            setLoading(true);
+
             const data = await getMyAppointments();
+
             setAppointments(data);
 
-        } catch (error) {
+            setError("");
 
-            console.error(error);
+        }
+        catch (err) {
 
-        } finally {
+            console.error(err);
+
+            setError("Failed to load appointments.");
+
+        }
+        finally {
 
             setLoading(false);
 
@@ -45,26 +60,33 @@ function MyAppointments() {
 
     const handleCancel = async (appointmentId) => {
 
-        const confirmCancel = window.confirm(
-            "Are you sure you want to cancel this appointment?"
-        );
-
-        if (!confirmCancel) return;
+        if (!window.confirm("Cancel this appointment?")) return;
 
         try {
 
+            setCancellingId(appointmentId);
+
             await cancelAppointment(appointmentId);
 
-            loadAppointments();
+            setSuccess("Appointment cancelled successfully.");
+            setError("");
 
-            alert("Appointment cancelled successfully.");
+            await loadAppointments();
 
-        } catch (error) {
+        }
+        catch (err) {
 
-            alert(
-                error.response?.data?.message ||
+            console.error(err);
+
+            setError(
+                err.response?.data?.message ??
                 "Unable to cancel appointment."
             );
+
+        }
+        finally {
+
+            setCancellingId(null);
 
         }
 
@@ -72,7 +94,7 @@ function MyAppointments() {
 
     const getBadge = (status) => {
 
-        switch (status.toLowerCase()) {
+        switch (status?.toLowerCase()) {
 
             case "pending":
                 return "warning";
@@ -105,7 +127,7 @@ function MyAppointments() {
 
     return (
 
-        <section className="my-appointments">
+        <section className="my-appointments py-5">
 
             <Container>
 
@@ -125,24 +147,31 @@ function MyAppointments() {
 
                 </div>
 
-                {appointments.length === 0 && (
+                {success && (
+                    <Alert variant="success">
+                        {success}
+                    </Alert>
+                )}
 
+                {error && (
+                    <Alert variant="danger">
+                        {error}
+                    </Alert>
+                )}
+
+                {!appointments.length && (
                     <Alert variant="info" className="text-center">
                         You don't have any appointments yet.
                     </Alert>
-
                 )}
 
                 <Row className="g-4">
 
                     {appointments.map((appointment) => (
 
-                        <Col
-                            lg={6}
-                            key={appointment.appointmentId}
-                        >
+                        <Col md={6} key={appointment.appointmentId}>
 
-                            <Card className="appointment-card">
+                            <Card className="shadow-sm border-0 h-100">
 
                                 <Card.Body>
 
@@ -150,16 +179,26 @@ function MyAppointments() {
 
                                         <div>
 
-                                            <h4>
+                                            <h4 className="fw-bold mb-3">
                                                 {appointment.serviceName}
                                             </h4>
 
-                                            <p className="mb-1">
+                                            <p>
                                                 <strong>Barber:</strong>{" "}
                                                 {appointment.barberName}
                                             </p>
 
-                                            <p className="mb-1">
+                                            <p>
+                                                <strong>Price:</strong>{" "}
+                                                ₱{appointment.servicePrice}
+                                            </p>
+
+                                            <p>
+                                                <strong>Duration:</strong>{" "}
+                                                {appointment.duration} mins
+                                            </p>
+
+                                            <p>
                                                 <strong>Date:</strong>{" "}
                                                 {new Date(
                                                     appointment.appointmentDate
@@ -171,35 +210,105 @@ function MyAppointments() {
                                                 {appointment.appointmentTime}
                                             </p>
 
+                                            {appointment.estimatedFinish && (
+
+                                                <p>
+
+                                                    <strong>Estimated Finish:</strong>{" "}
+                                                    {appointment.estimatedFinish}
+
+                                                </p>
+
+                                            )}
+
+                                            <p>
+
+                                                <strong>Booked:</strong>{" "}
+                                                {new Date(
+                                                    appointment.createdAt
+                                                ).toLocaleString()}
+
+                                            </p>
+
                                         </div>
 
-                                        <Badge
-                                            bg={getBadge(
-                                                appointment.status
+                                        <div className="text-end">
+
+                                            <Badge
+                                                bg={getBadge(appointment.status)}
+                                                className="px-3 py-2"
+                                            >
+                                                {appointment.status}
+                                            </Badge>
+
+                                            {appointment.paymentStatus === "Paid" && (
+                                                <>
+                                                    <br />
+                                                    <Badge
+                                                        bg="success"
+                                                        className="mt-2 px-3 py-2"
+                                                    >
+                                                        Paid
+                                                    </Badge>
+                                                </>
                                             )}
-                                            className="status-badge"
-                                        >
-                                            {appointment.status}
-                                        </Badge>
+
+                                        </div>
 
                                     </div>
 
-                                    {appointment.status.toLowerCase() ===
-                                        "pending" && (
+                                    <div className="mt-4 d-flex gap-2">
 
-                                        <Button
-                                            variant="danger"
-                                            className="mt-4"
-                                            onClick={() =>
-                                                handleCancel(
-                                                    appointment.appointmentId
-                                                )
-                                            }
-                                        >
-                                            Cancel Appointment
-                                        </Button>
+                                        {/* Pay Now */}
+                                        {appointment.status === "Confirmed" &&
+                                            appointment.paymentStatus !== "Paid" && (
 
-                                    )}
+                                             <Button
+                                                variant="success"
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/payments/${appointment.appointmentId}`,
+                                                        {
+                                                            state: {
+                                                                appointment
+                                                            }
+                                                        }
+                                                    )
+                                                }
+                                            >
+                                                Pay Now
+                                            </Button>
+
+                                        )}
+
+                                        {/* Cancel */}
+
+                                        {(appointment.status === "Pending" ||
+                                            appointment.status === "Confirmed") && (
+
+                                                <Button
+                                                    variant="danger"
+                                                    disabled={
+                                                        cancellingId ===
+                                                        appointment.appointmentId
+                                                    }
+                                                    onClick={() =>
+                                                        handleCancel(
+                                                            appointment.appointmentId
+                                                        )
+                                                    }
+                                                >
+
+                                                    {cancellingId ===
+                                                        appointment.appointmentId
+                                                        ? "Cancelling..."
+                                                        : "Cancel Appointment"}
+
+                                                </Button>
+
+                                            )}
+
+                                    </div>
 
                                 </Card.Body>
 

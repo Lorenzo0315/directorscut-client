@@ -15,6 +15,7 @@ import AppointmentStatusChart from "../../components/admin/dashboard/Appointment
 import RecentAppointments from "../../components/admin/dashboard/RecentAppointments";
 import RecentPayments from "../../components/admin/dashboard/RecentPayments";
 import QuickActions from "../../components/admin/dashboard/QuickActions";
+import DashboardInsights from "../../components/admin/dashboard/DashboardInsights";
 
 function Dashboard() {
 
@@ -70,7 +71,6 @@ function Dashboard() {
 
     }
 
-    // Temporary chart data until backend supports charts
     const revenueData = dashboard.revenueChart ?? [];
 
     const appointmentStatusData =
@@ -129,6 +129,15 @@ function Dashboard() {
                 </Col>
 
             </Row>
+
+            {/* Business Insights */}
+            <div className="mb-4">
+
+                <DashboardInsights
+                    insights={dashboard.insights}
+                />
+
+            </div>
 
             {/* Recent Tables */}
             <Row>

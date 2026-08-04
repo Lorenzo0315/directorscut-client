@@ -1,6 +1,4 @@
-import {
-    Card
-} from "react-bootstrap";
+import { Card } from "react-bootstrap";
 
 import {
     ResponsiveContainer,
@@ -12,7 +10,7 @@ import {
     Tooltip
 } from "recharts";
 
-function RevenueChart({ data }) {
+function RevenueChart({ data = [] }) {
 
     return (
 
@@ -39,15 +37,26 @@ function RevenueChart({ data }) {
                             dataKey="month"
                         />
 
-                        <YAxis />
+                        <YAxis
+                            tickFormatter={(value) =>
+                                `₱${Number(value).toLocaleString()}`
+                            }
+                        />
 
-                        <Tooltip />
+                        <Tooltip
+                            formatter={(value) => [
+                                `₱${Number(value).toLocaleString()}`,
+                                "Revenue"
+                            ]}
+                        />
 
                         <Line
                             type="monotone"
                             dataKey="revenue"
                             stroke="#2563EB"
                             strokeWidth={3}
+                            dot={{ r: 4 }}
+                            activeDot={{ r: 7 }}
                         />
 
                     </LineChart>

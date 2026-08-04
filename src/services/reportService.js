@@ -1,25 +1,22 @@
 import api from "./api";
 
-// Revenue Report
-export const getRevenueReport = async () => {
-    const response = await api.get("/Reports/revenue");
-    return response.data;
-};
+export const getReport = async (startDate = null, endDate = null) => {
+    try {
 
-// Popular Services
-export const getPopularServices = async () => {
-    const response = await api.get("/Reports/popular-services");
-    return response.data;
-};
+        const response = await api.get("/Reports", {
+            params: {
+                startDate,
+                endDate,
+            },
+        });
 
-// Top Barbers
-export const getTopBarbers = async () => {
-    const response = await api.get("/Reports/top-barbers");
-    return response.data;
-};
+        return response.data;
 
-// Monthly Appointments
-export const getMonthlyAppointments = async () => {
-    const response = await api.get("/Reports/monthly-appointments");
-    return response.data;
+    } catch (error) {
+
+        console.error("Error fetching report:", error);
+
+        throw error;
+
+    }
 };

@@ -31,6 +31,8 @@ function ManageAppointments() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const [processingId, setProcessingId] = useState(null);
+
     const [showModal, setShowModal] = useState(false);
     const [selectedAppointment, setSelectedAppointment] = useState(null);
 
@@ -42,6 +44,8 @@ function ManageAppointments() {
 
         try {
 
+            setLoading(true);
+
             const data = await getAllAppointments();
 
             setAppointments(data);
@@ -50,7 +54,6 @@ function ManageAppointments() {
         catch (err) {
 
             console.error(err);
-
             setError("Failed to load appointments.");
 
         }
@@ -80,7 +83,6 @@ function ManageAppointments() {
         catch (err) {
 
             console.error(err);
-
             alert("Failed to update appointment.");
 
         }
@@ -94,16 +96,21 @@ function ManageAppointments() {
 
         try {
 
+            setProcessingId(id);
+
             await deleteAppointment(id);
 
             loadAppointments();
 
         }
-        catch (err) {
-
-            console.error(err);
+        catch {
 
             alert("Failed to delete appointment.");
+
+        }
+        finally {
+
+            setProcessingId(null);
 
         }
 
@@ -112,6 +119,8 @@ function ManageAppointments() {
     const confirm = async (id) => {
 
         try {
+
+            setProcessingId(id);
 
             await confirmAppointment(id);
 
@@ -123,12 +132,19 @@ function ManageAppointments() {
             alert("Unable to confirm appointment.");
 
         }
+        finally {
+
+            setProcessingId(null);
+
+        }
 
     };
 
     const complete = async (id) => {
 
         try {
+
+            setProcessingId(id);
 
             await completeAppointment(id);
 
@@ -140,6 +156,11 @@ function ManageAppointments() {
             alert("Unable to complete appointment.");
 
         }
+        finally {
+
+            setProcessingId(null);
+
+        }
 
     };
 
@@ -148,16 +169,16 @@ function ManageAppointments() {
         switch (status) {
 
             case "Pending":
-                return <Badge bg="warning">{status}</Badge>;
+                return <Badge bg="warning">Pending</Badge>;
 
             case "Confirmed":
-                return <Badge bg="primary">{status}</Badge>;
+                return <Badge bg="info">Confirmed</Badge>;
 
             case "Completed":
-                return <Badge bg="success">{status}</Badge>;
+                return <Badge bg="success">Completed</Badge>;
 
             case "Cancelled":
-                return <Badge bg="danger">{status}</Badge>;
+                return <Badge bg="danger">Cancelled</Badge>;
 
             default:
                 return <Badge bg="secondary">{status}</Badge>;
@@ -169,9 +190,13 @@ function ManageAppointments() {
     if (loading) {
 
         return (
+
             <div className="text-center mt-5">
-                <Spinner animation="border" />
+
+                <Spinner animation="border" variant="warning"/>
+
             </div>
+
         );
 
     }
@@ -180,14 +205,20 @@ function ManageAppointments() {
 
         <div>
 
-            <h2 className="mb-4">
+            <h2 className="mb-4 fw-bold">
+
                 Manage Appointments
+
             </h2>
 
             {error &&
+
                 <Alert variant="danger">
+
                     {error}
+
                 </Alert>
+
             }
 
             <Card className="shadow-sm">
@@ -204,10 +235,12 @@ function ManageAppointments() {
                                 <th>Customer</th>
                                 <th>Barber</th>
                                 <th>Service</th>
+                                <th>Price</th>
+                                <th>Duration</th>
                                 <th>Date</th>
                                 <th>Time</th>
                                 <th>Status</th>
-                                <th width="250">Actions</th>
+                                <th width="260">Actions</th>
 
                             </tr>
 
@@ -215,12 +248,12 @@ function ManageAppointments() {
 
                         <tbody>
 
-                            {appointments.length === 0 &&
+                            {appointments.length === 0 && (
 
                                 <tr>
 
                                     <td
-                                        colSpan="8"
+                                        colSpan="10"
                                         className="text-center"
                                     >
 
@@ -230,7 +263,7 @@ function ManageAppointments() {
 
                                 </tr>
 
-                            }
+                            )}
 
                             {appointments.map((appointment, index) => (
 
@@ -244,20 +277,35 @@ function ManageAppointments() {
 
                                     <td>{appointment.serviceName}</td>
 
+                                    <td>₱{appointment.servicePrice}</td>
+
+                                    <td>{appointment.duration} mins</td>
+
                                     <td>
+
                                         {new Date(
                                             appointment.appointmentDate
                                         ).toLocaleDateString()}
+
                                     </td>
 
                                     <td>
-                                        {appointment.appointmentTime}
+
+                                        {new Date(
+                                            `1970-01-01T${appointment.appointmentTime}`
+                                        ).toLocaleTimeString([], {
+                                            hour: "numeric",
+                                            minute: "2-digit"
+                                        })}
+
                                     </td>
 
                                     <td>
+
                                         {statusBadge(
                                             appointment.status
                                         )}
+
                                     </td>
 
                                     <td>
@@ -268,10 +316,9 @@ function ManageAppointments() {
                                                 size="sm"
                                                 variant="warning"
                                                 className="me-2"
+                                                disabled={processingId === appointment.appointmentId}
                                                 onClick={() =>
-                                                    confirm(
-                                                        appointment.appointmentId
-                                                    )
+                                                    confirm(appointment.appointmentId)
                                                 }
                                             >
 
@@ -287,10 +334,9 @@ function ManageAppointments() {
                                                 size="sm"
                                                 variant="success"
                                                 className="me-2"
+                                                disabled={processingId === appointment.appointmentId}
                                                 onClick={() =>
-                                                    complete(
-                                                        appointment.appointmentId
-                                                    )
+                                                    complete(appointment.appointmentId)
                                                 }
                                             >
 
@@ -300,38 +346,47 @@ function ManageAppointments() {
 
                                         )}
 
-                                        <Button
-                                            size="sm"
-                                            variant="primary"
-                                            className="me-2"
-                                            onClick={() => {
+                                        {appointment.status !== "Completed" &&
+                                         appointment.status !== "Cancelled" && (
 
-                                                setSelectedAppointment(
-                                                    appointment
-                                                );
+                                            <Button
+                                                size="sm"
+                                                variant="primary"
+                                                className="me-2"
+                                                disabled={processingId === appointment.appointmentId}
+                                                onClick={() => {
 
-                                                setShowModal(true);
+                                                    setSelectedAppointment(appointment);
 
-                                            }}
-                                        >
+                                                    setShowModal(true);
 
-                                            <FaEdit />
+                                                }}
+                                            >
 
-                                        </Button>
+                                                <FaEdit />
 
-                                        <Button
-                                            size="sm"
-                                            variant="danger"
-                                            onClick={() =>
-                                                removeAppointment(
-                                                    appointment.appointmentId
-                                                )
-                                            }
-                                        >
+                                            </Button>
 
-                                            <FaTrash />
+                                        )}
 
-                                        </Button>
+                                        {appointment.status !== "Completed" && (
+
+                                            <Button
+                                                size="sm"
+                                                variant="danger"
+                                                disabled={processingId === appointment.appointmentId}
+                                                onClick={() =>
+                                                    removeAppointment(
+                                                        appointment.appointmentId
+                                                    )
+                                                }
+                                            >
+
+                                                <FaTrash />
+
+                                            </Button>
+
+                                        )}
 
                                     </td>
 

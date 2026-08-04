@@ -1,6 +1,9 @@
 import api from "./api";
 
+// ==============================
 // Admin
+// ==============================
+
 export const getAllAppointments = async () => {
     const response = await api.get("/Appointments");
     return response.data;
@@ -31,9 +34,16 @@ export const completeAppointment = async (id) => {
     return response.data;
 };
 
+// ==============================
 // Customer
+// ==============================
+
 export const createAppointment = async (data) => {
+
+    console.log("Sending Appointment:", data);
+
     const response = await api.post("/Appointments", data);
+
     return response.data;
 };
 
@@ -44,5 +54,18 @@ export const getMyAppointments = async () => {
 
 export const cancelAppointment = async (id) => {
     const response = await api.put(`/Appointments/${id}/cancel`);
+    return response.data;
+};
+
+// ==============================
+// Available Time Slots
+// ==============================
+
+export const getAvailableSlots = async (barberId, date) => {
+
+    const response = await api.get(
+        `/Appointments/available-slots?barberId=${barberId}&date=${date}`
+    );
+
     return response.data;
 };

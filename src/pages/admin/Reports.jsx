@@ -5,8 +5,11 @@ import {
     Col,
     Spinner,
     Alert,
-    Button
+    Button,
+    Card
 } from "react-bootstrap";
+
+import { getReport } from "../../services/reportService";
 
 import RevenueCards from "../../components/admin/reports/RevenueCards";
 import RevenueChart from "../../components/admin/reports/RevenueChart";
@@ -14,54 +17,43 @@ import ServicesChart from "../../components/admin/reports/ServicesChart";
 import BarbersChart from "../../components/admin/reports/BarbersChart";
 import MonthlyChart from "../../components/admin/reports/MonthlyChart";
 
-import {
-    getRevenueReport,
-    getPopularServices,
-    getTopBarbers,
-    getMonthlyAppointments
-} from "../../services/reportService";
+import ExportReportModal from "../../components/admin/reports/ExportReportModal";
 
 import { exportReportPDF } from "../../utils/reportPdf";
 
 function Reports() {
 
-    const [revenue, setRevenue] = useState(null);
-    const [popularServices, setPopularServices] = useState([]);
-    const [topBarbers, setTopBarbers] = useState([]);
-    const [monthlyAppointments, setMonthlyAppointments] = useState([]);
+    const [report, setReport] = useState(null);
 
     const [loading, setLoading] = useState(true);
+
     const [error, setError] = useState("");
 
+    const [showExportModal, setShowExportModal] = useState(false);
+
     useEffect(() => {
-        loadReports();
+
+        loadReport();
+
     }, []);
 
-    const loadReports = async () => {
+    const loadReport = async () => {
 
         try {
 
-            const [
-                revenueData,
-                servicesData,
-                barbersData,
-                appointmentsData
-            ] = await Promise.all([
-                getRevenueReport(),
-                getPopularServices(),
-                getTopBarbers(),
-                getMonthlyAppointments()
-            ]);
+            setLoading(true);
 
-            setRevenue(revenueData);
-            setPopularServices(servicesData);
-            setTopBarbers(barbersData);
-            setMonthlyAppointments(appointmentsData);
+            const data = await getReport();
+
+            setReport(data);
+
+            setError("");
 
         }
         catch (err) {
 
             console.error(err);
+
             setError("Failed to load reports.");
 
         }
@@ -73,23 +65,71 @@ function Reports() {
 
     };
 
-    const handleExportPDF = () => {
+    const handleExportPDF = async (
+        startDate,
+        endDate
+    ) => {
 
-        exportReportPDF(
-            revenue,
-            popularServices,
-            topBarbers,
-            monthlyAppointments
-        );
+        try {
+
+            const reportData = await getReport(
+                startDate,
+                endDate
+            );
+
+            exportReportPDF(
+                reportData,
+                startDate,
+                endDate
+            );
+
+        }
+        catch (err) {
+
+            console.error(err);
+
+        }
 
     };
 
     if (loading) {
 
         return (
+
             <div className="text-center mt-5">
+
                 <Spinner animation="border" />
+
             </div>
+
+        );
+
+    }
+
+    if (error) {
+
+        return (
+
+            <Alert variant="danger">
+
+                {error}
+
+            </Alert>
+
+        );
+
+    }
+
+    if (!report) {
+
+        return (
+
+            <Alert variant="warning">
+
+                No report data available.
+
+            </Alert>
+
         );
 
     }
@@ -98,12 +138,16 @@ function Reports() {
 
         <Container fluid>
 
+            {/* Header */}
+
             <Row className="align-items-center mb-4">
 
                 <Col>
 
-                    <h2>
-                        Reports
+                    <h2 className="fw-bold">
+
+                        Reports Dashboard
+
                     </h2>
 
                 </Col>
@@ -112,7 +156,7 @@ function Reports() {
 
                     <Button
                         variant="danger"
-                        onClick={handleExportPDF}
+                        onClick={() => setShowExportModal(true)}
                     >
                         Export PDF
                     </Button>
@@ -121,24 +165,62 @@ function Reports() {
 
             </Row>
 
-            {error && (
+            {/* Dashboard Summary */}
 
-                <Alert variant="danger">
-                    {error}
-                </Alert>
+            <Row className="g-3 mb-4">
 
-            )}
+                <Col lg={3} md={6}>
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <h6>Total Customers</h6>
+                            <h2>{report.totalCustomers}</h2>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                <Col lg={3} md={6}>
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <h6>Total Appointments</h6>
+                            <h2>{report.totalAppointments}</h2>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                <Col lg={3} md={6}>
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <h6>Total Revenue</h6>
+                            <h2>₱{report.totalRevenue?.toLocaleString()}</h2>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+                <Col lg={3} md={6}>
+                    <Card className="shadow-sm">
+                        <Card.Body>
+                            <h6>Completed</h6>
+                            <h2>{report.completedAppointments}</h2>
+                        </Card.Body>
+                    </Card>
+                </Col>
+
+            </Row>
 
             {/* Revenue Summary */}
-            <RevenueCards revenue={revenue} />
 
-            {/* Revenue Chart */}
+            <RevenueCards
+                revenue={report.revenueSummary}
+            />
+
+            {/* Revenue History */}
+
             <Row className="mt-4">
 
                 <Col>
 
                     <RevenueChart
-                        revenue={revenue}
+                        revenueReports={report.revenueReports ?? []}
                     />
 
                 </Col>
@@ -146,12 +228,13 @@ function Reports() {
             </Row>
 
             {/* Charts */}
+
             <Row className="mt-4">
 
                 <Col lg={6} className="mb-4">
 
                     <ServicesChart
-                        services={popularServices}
+                        services={report.popularServices ?? []}
                     />
 
                 </Col>
@@ -159,25 +242,32 @@ function Reports() {
                 <Col lg={6} className="mb-4">
 
                     <BarbersChart
-                        barbers={topBarbers}
+                        barbers={report.topBarbers ?? []}
                     />
 
                 </Col>
 
             </Row>
 
-            {/* Monthly Appointments */}
+            {/* Monthly */}
+
             <Row>
 
                 <Col>
 
                     <MonthlyChart
-                        appointments={monthlyAppointments}
+                        appointments={report.monthlyAppointments ?? []}
                     />
 
                 </Col>
 
             </Row>
+
+            <ExportReportModal
+                show={showExportModal}
+                onClose={() => setShowExportModal(false)}
+                onExport={handleExportPDF}
+            />
 
         </Container>
 

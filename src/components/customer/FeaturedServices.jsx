@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Button, Spinner } from "react-bootstrap";
+import {
+    Container,
+    Row,
+    Col,
+    Card,
+    Button,
+    Spinner
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import { getAllServices } from "../../services/serviceService";
@@ -10,6 +17,7 @@ import haircolor from "../../assets/images/haircolor.jpg";
 import treatment from "../../assets/images/treatment.jpg";
 
 function FeaturedServices() {
+
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -18,41 +26,75 @@ function FeaturedServices() {
     }, []);
 
     const loadServices = async () => {
-        try {
-            const data = await getAllServices();
 
-            // Show only the first 4 services
-            setServices(data.slice(0, 4));
-        } catch (error) {
-            console.error("Failed to load services:", error);
-        } finally {
-            setLoading(false);
+        try {
+
+            const response = await getAllServices();
+
+            // Support both API formats
+            const serviceList = response.data ?? response;
+
+            setServices(serviceList.slice(0, 4));
+
         }
+        catch (error) {
+
+            console.error("Failed to load services:", error);
+
+            setServices([]);
+
+        }
+        finally {
+
+            setLoading(false);
+
+        }
+
     };
 
-    const getImage = (serviceName) => {
+    const getImage = (serviceName = "") => {
+
         const name = serviceName.toLowerCase();
 
         if (name.includes("haircut")) return haircut;
+
         if (name.includes("beard")) return beard;
-        if (name.includes("color")) return haircolor;
+
+        if (
+            name.includes("color") ||
+            name.includes("colour")
+        )
+            return haircolor;
 
         return treatment;
+
     };
 
     if (loading) {
+
         return (
+
             <section className="featured-services py-5 text-center">
-                <Spinner animation="border" variant="warning" />
+
+                <Spinner
+                    animation="border"
+                    variant="warning"
+                />
+
             </section>
+
         );
+
     }
 
     return (
-        <section className="featured-services">
+
+        <section className="featured-services py-5">
+
             <Container>
 
                 <div className="text-center mb-5">
+
                     <span className="section-badge">
                         Our Services
                     </span>
@@ -64,73 +106,99 @@ function FeaturedServices() {
                     <p className="section-subtitle">
                         Experience premium barber services tailored to your style.
                     </p>
+
                 </div>
 
-                <Row className="g-4">
-                    {services.map((service) => (
-                        <Col
-                            lg={3}
-                            md={6}
-                            key={service.serviceId}
-                        >
-                            <Card className="service-card h-100">
+                {services.length === 0 ? (
 
-                                <Card.Img
-                                    variant="top"
-                                    src={getImage(service.serviceName)}
-                                    className="service-image"
-                                />
+                    <div className="text-center">
 
-                                <Card.Body>
+                        <h5>No services available.</h5>
 
-                                    <h5 className="service-title">
-                                        {service.serviceName}
-                                    </h5>
+                    </div>
 
-                                    <p className="service-description">
-                                        {service.description}
-                                    </p>
+                ) : (
 
-                                    <div className="service-info">
-                                        <span className="service-price">
-                                            ₱{service.price}
-                                        </span>
+                    <Row className="g-4">
 
-                                        <span className="service-duration">
-                                            {service.duration} mins
-                                        </span>
-                                    </div>
+                        {services.map((service) => (
 
-                                    <Button
-                                        as={Link}
-                                        to="/book-appointment"
-                                        variant="warning"
-                                        className="w-100 mt-3"
-                                    >
-                                        Book Now
-                                    </Button>
+                            <Col
+                                lg={3}
+                                md={6}
+                                key={service.serviceId}
+                            >
 
-                                </Card.Body>
+                                <Card className="service-card h-100 shadow-sm border-0">
 
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
+                                    <Card.Img
+                                        variant="top"
+                                        src={getImage(service.serviceName)}
+                                        className="service-image"
+                                    />
+
+                                    <Card.Body className="d-flex flex-column">
+
+                                        <h5 className="service-title">
+                                            {service.serviceName}
+                                        </h5>
+
+                                        <p className="service-description flex-grow-1">
+                                            {service.description}
+                                        </p>
+
+                                        <div className="d-flex justify-content-between align-items-center">
+
+                                            <span className="service-price fw-bold text-warning">
+                                                ₱{Number(service.price).toLocaleString()}
+                                            </span>
+
+                                            <span className="service-duration text-muted">
+                                                {service.duration} mins
+                                            </span>
+
+                                        </div>
+
+                                        <Button
+                                            as={Link}
+                                            to="/book-appointment"
+                                            variant="warning"
+                                            className="w-100 mt-3"
+                                        >
+                                            Book Now
+                                        </Button>
+
+                                    </Card.Body>
+
+                                </Card>
+
+                            </Col>
+
+                        ))}
+
+                    </Row>
+
+                )}
 
                 <div className="text-center mt-5">
+
                     <Button
                         as={Link}
                         to="/services"
-                        variant="outline-dark"
+                        variant="outline-warning"
                         size="lg"
                     >
                         View All Services
                     </Button>
+
                 </div>
 
             </Container>
+
         </section>
+
     );
+
 }
 
 export default FeaturedServices;

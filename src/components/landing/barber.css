@@ -1,0 +1,115 @@
+.barbers-section{
+
+    background:white;
+
+}
+
+.barber-card{
+
+    border:none;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    transition:.4s;
+
+    box-shadow:0 20px 45px rgba(0,0,0,.08);
+
+}
+
+.barber-card:hover{
+
+    transform:translateY(-12px);
+
+    box-shadow:0 35px 60px rgba(0,0,0,.18);
+
+}
+
+.barber-image-wrapper{
+
+    padding:40px;
+
+    background:#F8FAFC;
+
+}
+
+.barber-image{
+
+    width:170px;
+
+    height:170px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    display:block;
+
+    margin:auto;
+
+    transition:.4s;
+
+    border:6px solid #D4AF37;
+
+}
+
+.barber-card:hover .barber-image{
+
+    transform:scale(1.08);
+
+}
+
+.barber-specialization{
+
+    color:#D4AF37;
+
+    font-weight:700;
+
+    margin-top:10px;
+
+}
+
+.availability-badge{
+
+    font-size:.9rem;
+
+    padding:8px 14px;
+
+    border-radius:30px;
+
+    margin-top:15px;
+
+}
+
+.rating{
+
+    color:#D4AF37;
+
+    font-size:20px;
+
+}
+
+.book-barber-btn{
+
+    width:100%;
+
+    background:#111827;
+
+    border:none;
+
+    border-radius:40px;
+
+    padding:12px;
+
+    transition:.3s;
+
+}
+
+.book-barber-btn:hover{
+
+    background:#D4AF37;
+
+    color:#111;
+
+}

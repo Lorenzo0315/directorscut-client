@@ -8,7 +8,7 @@ import {
     Tooltip
 } from "recharts";
 
-function BarbersChart({ barbers }) {
+function BarbersChart({ barbers = [] }) {
 
     return (
 
@@ -29,7 +29,15 @@ function BarbersChart({ barbers }) {
                     height={320}
                 >
 
-                    <BarChart data={barbers}>
+                    <BarChart
+                        data={barbers}
+                        margin={{
+                            top: 10,
+                            right: 20,
+                            left: 20,
+                            bottom: 20
+                        }}
+                    >
 
                         <CartesianGrid strokeDasharray="3 3" />
 
@@ -39,11 +47,17 @@ function BarbersChart({ barbers }) {
 
                         <YAxis />
 
-                        <Tooltip />
+                        <Tooltip
+                            formatter={(value) => [
+                                `${value} Appointments`,
+                                "Total"
+                            ]}
+                        />
 
                         <Bar
                             dataKey="totalAppointments"
                             fill="#198754"
+                            radius={[6, 6, 0, 0]}
                         />
 
                     </BarChart>

@@ -1,40 +1,29 @@
 import {
     ResponsiveContainer,
-    BarChart,
-    Bar,
+    LineChart,
+    Line,
     XAxis,
     YAxis,
     CartesianGrid,
     Tooltip
 } from "recharts";
 
-function RevenueChart({ revenue }) {
+function RevenueChart({ revenueReports = [] }) {
 
-    const data = [
-        {
-            period: "Today",
-            amount: revenue?.todayRevenue || 0
-        },
-        {
-            period: "Week",
-            amount: revenue?.thisWeekRevenue || 0
-        },
-        {
-            period: "Month",
-            amount: revenue?.thisMonthRevenue || 0
-        },
-        {
-            period: "Year",
-            amount: revenue?.thisYearRevenue || 0
-        }
-    ];
+    const data = revenueReports
+        .slice()
+        .reverse()
+        .map(item => ({
+            date: new Date(item.paymentDate).toLocaleDateString(),
+            revenue: item.amount
+        }));
 
     return (
         <div className="card shadow-sm mb-4">
 
             <div className="card-header">
                 <h5 className="mb-0">
-                    Revenue Overview
+                    Revenue History
                 </h5>
             </div>
 
@@ -42,25 +31,34 @@ function RevenueChart({ revenue }) {
 
                 <ResponsiveContainer
                     width="100%"
-                    height={300}
+                    height={320}
                 >
 
-                    <BarChart data={data}>
+                    <LineChart data={data}>
 
                         <CartesianGrid strokeDasharray="3 3" />
 
-                        <XAxis dataKey="period" />
+                        <XAxis
+                            dataKey="date"
+                        />
 
                         <YAxis />
 
-                        <Tooltip />
-
-                        <Bar
-                            dataKey="amount"
-                            fill="#d4af37"
+                        <Tooltip
+                            formatter={(value) => [
+                                `₱${Number(value).toLocaleString()}`,
+                                "Revenue"
+                            ]}
                         />
 
-                    </BarChart>
+                        <Line
+                            type="monotone"
+                            dataKey="revenue"
+                            stroke="#d4af37"
+                            strokeWidth={3}
+                        />
+
+                    </LineChart>
 
                 </ResponsiveContainer>
 

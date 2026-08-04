@@ -1,0 +1,77 @@
+.why-section{
+
+    background:#0F172A;
+
+}
+
+.feature-card{
+
+    background:#1E293B;
+
+    border-radius:20px;
+
+    padding:45px 30px;
+
+    text-align:center;
+
+    transition:.4s;
+
+    height:100%;
+
+    border:1px solid rgba(255,255,255,.05);
+
+}
+
+.feature-card:hover{
+
+    transform:translateY(-12px);
+
+    background:#273449;
+
+    box-shadow:0 25px 50px rgba(0,0,0,.4);
+
+}
+
+.feature-icon{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    margin-bottom:25px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#D4AF37;
+
+    color:#111827;
+
+    font-size:34px;
+
+}
+
+.feature-card h4{
+
+    color:white;
+
+    font-weight:700;
+
+    margin-bottom:15px;
+
+}
+
+.feature-card p{
+
+    color:#CBD5E1;
+
+    line-height:1.8;
+
+}

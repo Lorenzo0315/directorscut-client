@@ -1,65 +1,81 @@
 import {
     ResponsiveContainer,
-    LineChart,
-    Line,
+    BarChart,
+    Bar,
     XAxis,
     YAxis,
     CartesianGrid,
     Tooltip
 } from "recharts";
 
-function MonthlyChart({ appointments }) {
+function RevenueChart({ report }) {
+
+    const summary = report?.revenueSummary ?? {};
+
+    const data = [
+        {
+            period: "Today",
+            amount: summary.todayRevenue ?? 0
+        },
+        {
+            period: "Week",
+            amount: summary.thisWeekRevenue ?? 0
+        },
+        {
+            period: "Month",
+            amount: summary.thisMonthRevenue ?? 0
+        },
+        {
+            period: "Year",
+            amount: summary.thisYearRevenue ?? 0
+        }
+    ];
 
     return (
-
         <div className="card shadow-sm mb-4">
 
             <div className="card-header">
-
                 <h5 className="mb-0">
-                    Monthly Appointments
+                    Revenue Overview
                 </h5>
-
             </div>
 
             <div className="card-body">
 
                 <ResponsiveContainer
                     width="100%"
-                    height={320}
+                    height={300}
                 >
 
-                    <LineChart
-                        data={appointments}
-                    >
+                    <BarChart data={data}>
 
                         <CartesianGrid strokeDasharray="3 3" />
 
-                        <XAxis
-                            dataKey="month"
-                        />
+                        <XAxis dataKey="period" />
 
                         <YAxis />
 
-                        <Tooltip />
-
-                        <Line
-                            type="monotone"
-                            dataKey="totalAppointments"
-                            stroke="#0d6efd"
-                            strokeWidth={3}
+                        <Tooltip
+                            formatter={(value) => [
+                                `₱${Number(value).toLocaleString()}`,
+                                "Revenue"
+                            ]}
                         />
 
-                    </LineChart>
+                        <Bar
+                            dataKey="amount"
+                            fill="#d4af37"
+                            radius={[6, 6, 0, 0]}
+                        />
+
+                    </BarChart>
 
                 </ResponsiveContainer>
 
             </div>
 
         </div>
-
     );
-
 }
 
-export default MonthlyChart;
+export default RevenueChart;

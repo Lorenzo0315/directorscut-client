@@ -5,50 +5,52 @@ import {
     FaAward,
     FaSmile,
     FaTools,
-    FaDollarSign,
+    FaDollarSign
 } from "react-icons/fa";
 
 function WhyChooseUs() {
+
     const features = [
         {
             icon: <FaUserTie />,
             title: "Experienced Barbers",
             description:
-                "Our skilled barbers combine classic techniques with modern trends to give you the perfect style.",
+                "Professional barbers with years of experience delivering clean cuts and modern styles."
         },
         {
             icon: <FaCalendarCheck />,
             title: "Easy Online Booking",
             description:
-                "Book your appointment anytime with our convenient and hassle-free online reservation system.",
+                "Book appointments anytime with our fast and hassle-free reservation system."
         },
         {
             icon: <FaAward />,
-            title: "Premium Products",
+            title: "Premium Quality",
             description:
-                "We use only trusted grooming products to ensure the highest quality service for every client.",
+                "We provide top-quality grooming services using trusted products and proven techniques."
         },
         {
             icon: <FaTools />,
             title: "Modern Equipment",
             description:
-                "Our shop is equipped with professional tools and maintains the highest hygiene standards.",
+                "Our shop uses professional equipment while maintaining strict cleanliness standards."
         },
         {
             icon: <FaDollarSign />,
-            title: "Affordable Pricing",
+            title: "Affordable Prices",
             description:
-                "Enjoy premium grooming services at competitive prices without compromising quality.",
+                "Enjoy premium barber services at reasonable prices without sacrificing quality."
         },
         {
             icon: <FaSmile />,
             title: "Customer Satisfaction",
             description:
-                "Thousands of satisfied customers trust Director's Cut for consistent quality and excellent service.",
-        },
+                "Your confidence and satisfaction are our top priorities every time you visit."
+        }
     ];
 
     return (
+
         <section className="why-section py-5">
 
             <Container>
@@ -59,13 +61,14 @@ function WhyChooseUs() {
                         Why Choose Us
                     </span>
 
-                    <h2 className="section-title">
-                        Why Choose Director's Cut
+                    <h2 className="section-title mt-2">
+                        Why Customers Choose Director's Cut
                     </h2>
 
-                    <p className="section-subtitle">
-                        We provide more than just haircuts—we deliver confidence,
-                        comfort, and premium grooming experiences every visit.
+                    <p className="section-subtitle mx-auto">
+                        We deliver more than just haircuts. Our goal is to give every
+                        customer a premium grooming experience with quality service,
+                        skilled professionals, and exceptional customer care.
                     </p>
 
                 </div>
@@ -80,15 +83,19 @@ function WhyChooseUs() {
                             key={index}
                         >
 
-                            <div className="feature-card">
+                            <div className="feature-card h-100 text-center">
 
-                                <div className="feature-icon">
+                                <div className="feature-icon mb-3">
                                     {feature.icon}
                                 </div>
 
-                                <h4>{feature.title}</h4>
+                                <h4 className="mb-3">
+                                    {feature.title}
+                                </h4>
 
-                                <p>{feature.description}</p>
+                                <p className="mb-0">
+                                    {feature.description}
+                                </p>
 
                             </div>
 
@@ -101,7 +108,9 @@ function WhyChooseUs() {
             </Container>
 
         </section>
+
     );
+
 }
 
 export default WhyChooseUs;

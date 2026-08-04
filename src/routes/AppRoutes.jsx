@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // Route Protection
 import ProtectedRoute from "../components/auth/ProtectedRoute";
@@ -9,6 +9,9 @@ import AdminRoute from "../components/auth/AdminRoute";
 import AuthLayout from "../layouts/AuthLayout";
 import CustomerLayout from "../layouts/CustomerLayout";
 import AdminLayout from "../layouts/AdminLayout";
+
+// Landing Page
+import LandingPage from "../pages/LandingPage";
 
 // Authentication
 import Login from "../pages/auth/Login";
@@ -21,6 +24,7 @@ import Barbers from "../pages/customer/Barbers";
 import BookAppointment from "../pages/customer/BookAppointment";
 import MyAppointments from "../pages/customer/MyAppointments";
 import MyPayments from "../pages/customer/MyPayments";
+import PaymentPage from "../pages/customer/PaymentPage";
 
 // Admin Pages
 import Dashboard from "../pages/admin/Dashboard";
@@ -34,14 +38,21 @@ function AppRoutes() {
     return (
         <Routes>
 
-            {/* Redirect */}
+            {/* ========================= */}
+            {/* PUBLIC LANDING PAGE */}
+            {/* ========================= */}
+
             <Route
                 path="/"
-                element={<Navigate to="/login" replace />}
+                element={<LandingPage />}
             />
 
-            {/* Authentication */}
+            {/* ========================= */}
+            {/* AUTHENTICATION */}
+            {/* ========================= */}
+
             <Route element={<AuthLayout />}>
+
                 <Route
                     path="/login"
                     element={<Login />}
@@ -51,9 +62,13 @@ function AppRoutes() {
                     path="/register"
                     element={<Register />}
                 />
+
             </Route>
 
-            {/* Customer Routes */}
+            {/* ========================= */}
+            {/* CUSTOMER ROUTES */}
+            {/* ========================= */}
+
             <Route
                 element={
                     <ProtectedRoute>
@@ -63,6 +78,7 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             >
+
                 <Route
                     path="/home"
                     element={<Home />}
@@ -89,12 +105,21 @@ function AppRoutes() {
                 />
 
                 <Route
+                    path="/payments/:appointmentId"
+                    element={<PaymentPage />}
+                />
+
+                <Route
                     path="/my-payments"
                     element={<MyPayments />}
                 />
+
             </Route>
 
-            {/* Admin Routes */}
+            {/* ========================= */}
+            {/* ADMIN ROUTES */}
+            {/* ========================= */}
+
             <Route
                 element={
                     <ProtectedRoute>
@@ -104,6 +129,7 @@ function AppRoutes() {
                     </ProtectedRoute>
                 }
             >
+
                 <Route
                     path="/dashboard"
                     element={<Dashboard />}
@@ -133,9 +159,13 @@ function AppRoutes() {
                     path="/reports"
                     element={<Reports />}
                 />
+
             </Route>
 
-            {/* 404 */}
+            {/* ========================= */}
+            {/* 404 PAGE */}
+            {/* ========================= */}
+
             <Route
                 path="*"
                 element={

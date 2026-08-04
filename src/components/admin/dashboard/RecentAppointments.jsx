@@ -1,7 +1,7 @@
 import { Card, Table, Badge } from "react-bootstrap";
 import { FaCalendarAlt } from "react-icons/fa";
 
-function RecentAppointments({ appointments }) {
+function RecentAppointments({ appointments = [] }) {
 
     const getStatusBadge = (status) => {
 
@@ -100,9 +100,7 @@ function RecentAppointments({ appointments }) {
                 />
 
                 <h5 className="mb-0 fw-bold">
-
                     Recent Appointments
-
                 </h5>
 
             </Card.Header>
@@ -149,9 +147,7 @@ function RecentAppointments({ appointments }) {
                                     colSpan="6"
                                     className="text-center py-5 text-muted"
                                 >
-
                                     No recent appointments found.
-
                                 </td>
 
                             </tr>
@@ -163,43 +159,31 @@ function RecentAppointments({ appointments }) {
                                 <tr key={appointment.appointmentId}>
 
                                     <td className="ps-4 fw-semibold">
-
                                         {index + 1}
-
                                     </td>
 
                                     <td>
-
                                         {appointment.customerName}
-
                                     </td>
 
                                     <td>
-
                                         {appointment.barberName}
-
                                     </td>
 
                                     <td>
-
                                         {appointment.serviceName}
-
                                     </td>
 
                                     <td>
-
                                         {new Date(
                                             appointment.appointmentDate
                                         ).toLocaleDateString()}
-
                                     </td>
 
                                     <td className="pe-4">
-
                                         {getStatusBadge(
                                             appointment.status
                                         )}
-
                                     </td>
 
                                 </tr>

@@ -1,5 +1,14 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Card, Badge, Button } from "react-bootstrap";
+import {
+    Container,
+    Row,
+    Col,
+    Card,
+    Badge,
+    Button,
+    Spinner
+} from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 import { getBarbers } from "../../services/barberService";
 
@@ -10,18 +19,33 @@ import barber3 from "../../assets/images/barber3.png";
 function BarbersSection() {
 
     const [barbers, setBarbers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         loadBarbers();
     }, []);
 
     const loadBarbers = async () => {
+
         try {
+
             const data = await getBarbers();
-            setBarbers(data);
-        } catch (error) {
-            console.error("Failed to load barbers:", error);
+
+            // Only display first 3 barbers on Home page
+            setBarbers(data.slice(0, 3));
+
         }
+        catch (error) {
+
+            console.error("Failed to load barbers:", error);
+
+        }
+        finally {
+
+            setLoading(false);
+
+        }
+
     };
 
     const barberImages = [
@@ -30,7 +54,18 @@ function BarbersSection() {
         barber3
     ];
 
+    if (loading) {
+
+        return (
+            <section className="barbers-section py-5 text-center">
+                <Spinner animation="border" variant="warning" />
+            </section>
+        );
+
+    }
+
     return (
+
         <section className="barbers-section">
 
             <Container>
@@ -54,62 +89,95 @@ function BarbersSection() {
 
                 <Row className="g-4">
 
-                    {barbers.map((barber, index) => (
+                    {barbers.length > 0 ? (
 
-                        <Col
-                            lg={4}
-                            md={6}
-                            key={barber.barberId}
-                        >
+                        barbers.map((barber, index) => (
 
-                            <Card className="barber-card h-100">
+                            <Col
+                                lg={4}
+                                md={6}
+                                key={barber.barberId}
+                            >
 
-                                <Card.Img
-                                    variant="top"
-                                    src={barberImages[index % barberImages.length]}
-                                    className="barber-image"
-                                />
+                                <Card className="barber-card h-100 shadow-sm border-0">
 
-                                <Card.Body>
+                                    <Card.Img
+                                        variant="top"
+                                        src={barberImages[index % barberImages.length]}
+                                        className="barber-image"
+                                    />
 
-                                    <h4 className="barber-name">
-                                        {barber.fullName}
-                                    </h4>
+                                    <Card.Body>
 
-                                    <p className="barber-specialization">
-                                        {barber.specialization}
-                                    </p>
+                                        <h4 className="barber-name">
+                                            {barber.fullName}
+                                        </h4>
 
-                                    <Badge
-                                        bg={barber.isAvailable ? "success" : "secondary"}
-                                        className="mb-3"
-                                    >
-                                        {barber.isAvailable
-                                            ? "Available"
-                                            : "Unavailable"}
-                                    </Badge>
+                                        <p className="barber-specialization">
+                                            {barber.specialization}
+                                        </p>
 
-                                    <Button
-                                        variant="warning"
-                                        className="w-100"
-                                    >
-                                        Book Appointment
-                                    </Button>
+                                        <Badge
+                                            bg={barber.isAvailable ? "success" : "secondary"}
+                                            className="mb-3"
+                                        >
+                                            {barber.isAvailable
+                                                ? "Available"
+                                                : "Unavailable"}
+                                        </Badge>
 
-                                </Card.Body>
+                                        <Button
+                                            as={Link}
+                                            to="/book-appointment"
+                                            variant="warning"
+                                            className="w-100"
+                                        >
+                                            Book Appointment
+                                        </Button>
 
-                            </Card>
+                                    </Card.Body>
+
+                                </Card>
+
+                            </Col>
+
+                        ))
+
+                    ) : (
+
+                        <Col>
+
+                            <div className="text-center py-5">
+
+                                <h5>No barbers available.</h5>
+
+                            </div>
 
                         </Col>
 
-                    ))}
+                    )}
 
                 </Row>
+
+                <div className="text-center mt-5">
+
+                    <Button
+                        as={Link}
+                        to="/barbers"
+                        variant="outline-dark"
+                        size="lg"
+                    >
+                        View All Barbers
+                    </Button>
+
+                </div>
 
             </Container>
 
         </section>
+
     );
+
 }
 
 export default BarbersSection;

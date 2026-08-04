@@ -15,26 +15,7 @@ const COLORS = [
     "#EF4444"  // Cancelled
 ];
 
-function AppointmentStatusChart({ dashboard }) {
-
-    const chartData = [
-        {
-            status: "Pending",
-            count: dashboard?.pendingAppointments ?? 0
-        },
-        {
-            status: "Confirmed",
-            count: dashboard?.confirmedAppointments ?? 0
-        },
-        {
-            status: "Completed",
-            count: dashboard?.completedAppointments ?? 0
-        },
-        {
-            status: "Cancelled",
-            count: dashboard?.cancelledAppointments ?? 0
-        }
-    ];
+function AppointmentStatusChart({ data = [] }) {
 
     return (
         <Card
@@ -53,11 +34,10 @@ function AppointmentStatusChart({ dashboard }) {
                     width="100%"
                     height={320}
                 >
-
                     <PieChart>
 
                         <Pie
-                            data={chartData}
+                            data={data}
                             dataKey="count"
                             nameKey="status"
                             cx="50%"
@@ -65,22 +45,23 @@ function AppointmentStatusChart({ dashboard }) {
                             innerRadius={65}
                             outerRadius={105}
                             paddingAngle={4}
-                            label={({ status, count }) => `${status}: ${count}`}
+                            label={({ status, count }) =>
+                                `${status}: ${count}`
+                            }
                         >
-
-                            {chartData.map((entry, index) => (
-
+                            {data.map((entry, index) => (
                                 <Cell
                                     key={entry.status}
-                                    fill={COLORS[index]}
+                                    fill={COLORS[index % COLORS.length]}
                                 />
-
                             ))}
-
                         </Pie>
 
                         <Tooltip
-                            formatter={(value) => [`${value}`, "Appointments"]}
+                            formatter={(value) => [
+                                value,
+                                "Appointments"
+                            ]}
                         />
 
                         <Legend
@@ -90,11 +71,9 @@ function AppointmentStatusChart({ dashboard }) {
                         />
 
                     </PieChart>
-
                 </ResponsiveContainer>
 
             </Card.Body>
-
         </Card>
     );
 }

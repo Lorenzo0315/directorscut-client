@@ -8,7 +8,7 @@ import {
     Tooltip
 } from "recharts";
 
-function ServicesChart({ services }) {
+function ServicesChart({ services = [] }) {
 
     return (
 
@@ -33,27 +33,34 @@ function ServicesChart({ services }) {
                         data={services}
                         layout="vertical"
                         margin={{
-                            left: 40
+                            top: 10,
+                            right: 20,
+                            left: 40,
+                            bottom: 10
                         }}
                     >
 
                         <CartesianGrid strokeDasharray="3 3" />
 
-                        <XAxis
-                            type="number"
-                        />
+                        <XAxis type="number" />
 
                         <YAxis
                             type="category"
                             dataKey="serviceName"
-                            width={160}
+                            width={170}
                         />
 
-                        <Tooltip />
+                        <Tooltip
+                            formatter={(value) => [
+                                `${value} Bookings`,
+                                "Total"
+                            ]}
+                        />
 
                         <Bar
                             dataKey="totalBookings"
                             fill="#d4af37"
+                            radius={[0, 6, 6, 0]}
                         />
 
                     </BarChart>
