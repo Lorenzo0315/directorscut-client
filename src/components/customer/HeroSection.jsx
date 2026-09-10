@@ -1,14 +1,14 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import PrimaryButton from "../ui/PrimaryButton";
-import SecondaryButton from "../ui/SecondaryButton";
+import "../../styles/customer.css";
 
 function HeroSection() {
     return (
         <section className="hero-section">
             <Container>
-
                 <Row className="align-items-center">
+
+                    {/* ================= HERO CONTENT ================= */}
 
                     <Col lg={6}>
 
@@ -32,23 +32,29 @@ function HeroSection() {
 
                         <div className="hero-buttons">
 
-                            <PrimaryButton
-                                as={Link}
+                            {/* BOOK APPOINTMENT */}
+
+                            <Link
                                 to="/book-appointment"
+                                className="hero-button hero-button-primary"
                             >
                                 Book Appointment
-                            </PrimaryButton>
+                            </Link>
 
-                            <SecondaryButton
-                                as={Link}
+                            {/* EXPLORE SERVICES */}
+
+                            <Link
                                 to="/services"
+                                className="hero-button hero-button-secondary"
                             >
                                 Explore Services
-                            </SecondaryButton>
+                            </Link>
 
                         </div>
 
                     </Col>
+
+                    {/* ================= HERO IMAGE ================= */}
 
                     <Col lg={6}>
 
@@ -61,7 +67,6 @@ function HeroSection() {
                     </Col>
 
                 </Row>
-
             </Container>
         </section>
     );
