@@ -570,4 +570,4 @@ function ManageAppointments() {
 
 }
 
-export default ManageAppointments;n
+export default ManageAppointments;
