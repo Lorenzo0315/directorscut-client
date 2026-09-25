@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Container,
   Card,
@@ -12,33 +12,90 @@ import {
 } from "react-bootstrap";
 
 import { createPayment } from "../../services/paymentService";
+import { getMyAppointments } from "../../services/appointmentService";
 
 function PaymentPage() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { appointmentId } = useParams();
 
-  const appointment = location.state?.appointment;
-
+  const [appointment, setAppointment] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [paymentLoading, setPaymentLoading] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("Cash");
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  // ✅ Handle missing appointment
-  if (!appointment) {
+  // Load appointment using the ID from the URL
+  useEffect(() => {
+    const loadAppointment = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const appointments = await getMyAppointments();
+
+        const foundAppointment = appointments.find(
+          (item) =>
+            Number(item.appointmentId) === Number(appointmentId)
+        );
+
+        if (!foundAppointment) {
+          setError("Appointment information not found.");
+          return;
+        }
+
+        setAppointment(foundAppointment);
+      } catch (err) {
+        console.error(err);
+
+        setError(
+          err.response?.data?.message ??
+          "Failed to load appointment information."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadAppointment();
+  }, [appointmentId]);
+
+  // Loading appointment
+  if (loading) {
     return (
       <Container className="py-5">
-        <Alert variant="danger">Appointment information not found.</Alert>
-        <Button onClick={() => navigate("/my-appointments")}>Back</Button>
+        <div className="text-center">
+          <Spinner animation="border" variant="warning" />
+          <p className="mt-3">Loading appointment...</p>
+        </div>
       </Container>
     );
   }
 
-  // ✅ Handle payment submission
+  // Appointment not found
+  if (!appointment) {
+    return (
+      <Container className="py-5">
+        <Alert variant="danger">
+          {error || "Appointment information not found."}
+        </Alert>
+
+        <Button
+          variant="primary"
+          onClick={() => navigate("/my-appointments")}
+        >
+          Back
+        </Button>
+      </Container>
+    );
+  }
+
+  // Handle payment submission
   const handlePayment = async () => {
     try {
-      setLoading(true);
+      setPaymentLoading(true);
       setError("");
+      setSuccess("");
 
       await createPayment({
         appointmentId: appointment.appointmentId,
@@ -53,9 +110,13 @@ function PaymentPage() {
       }, 1500);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message ?? "Payment failed.");
+
+      setError(
+        err.response?.data?.message ??
+        "Payment failed."
+      );
     } finally {
-      setLoading(false);
+      setPaymentLoading(false);
     }
   };
 
@@ -70,18 +131,28 @@ function PaymentPage() {
               </Card.Header>
 
               <Card.Body>
-                {/* ✅ Alerts */}
-                {success && <Alert variant="success">{success}</Alert>}
-                {error && <Alert variant="danger">{error}</Alert>}
+                {success && (
+                  <Alert variant="success">
+                    {success}
+                  </Alert>
+                )}
 
-                {/* ✅ Appointment Summary */}
-                <h4 className="mb-4">Appointment Summary</h4>
+                {error && (
+                  <Alert variant="danger">
+                    {error}
+                  </Alert>
+                )}
+
+                <h4 className="mb-4">
+                  Appointment Summary
+                </h4>
 
                 <Row className="mb-3">
                   <Col md={6}>
                     <strong>Service</strong>
                     <p>{appointment.serviceName}</p>
                   </Col>
+
                   <Col md={6}>
                     <strong>Barber</strong>
                     <p>{appointment.barberName}</p>
@@ -92,9 +163,12 @@ function PaymentPage() {
                   <Col md={6}>
                     <strong>Date</strong>
                     <p>
-                      {new Date(appointment.appointmentDate).toLocaleDateString()}
+                      {new Date(
+                        appointment.appointmentDate
+                      ).toLocaleDateString()}
                     </p>
                   </Col>
+
                   <Col md={6}>
                     <strong>Time</strong>
                     <p>{appointment.appointmentTime}</p>
@@ -104,30 +178,42 @@ function PaymentPage() {
                 <Row className="mb-4">
                   <Col>
                     <h4 className="text-success fw-bold">
-                      Total: ₱{Number(appointment.servicePrice).toFixed(2)}
+                      Total: ₱
+                      {Number(
+                        appointment.servicePrice
+                      ).toFixed(2)}
                     </h4>
                   </Col>
                 </Row>
 
-                {/* ✅ Payment Method */}
                 <Form.Group className="mb-4">
-                  <Form.Label>Payment Method</Form.Label>
+                  <Form.Label>
+                    Payment Method
+                  </Form.Label>
+
                   <Form.Select
                     value={paymentMethod}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    onChange={(e) =>
+                      setPaymentMethod(e.target.value)
+                    }
                   >
                     <option value="Cash">Cash</option>
                     <option value="GCash">GCash</option>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="Debit Card">Debit Card</option>
+                    <option value="Credit Card">
+                      Credit Card
+                    </option>
+                    <option value="Debit Card">
+                      Debit Card
+                    </option>
                   </Form.Select>
                 </Form.Group>
 
-                {/* ✅ Action Buttons */}
                 <div className="d-flex gap-3">
                   <Button
                     variant="secondary"
-                    onClick={() => navigate("/my-appointments")}
+                    onClick={() =>
+                      navigate("/my-appointments")
+                    }
                   >
                     Back
                   </Button>
@@ -135,9 +221,9 @@ function PaymentPage() {
                   <Button
                     variant="success"
                     onClick={handlePayment}
-                    disabled={loading}
+                    disabled={paymentLoading}
                   >
-                    {loading ? (
+                    {paymentLoading ? (
                       <>
                         <Spinner
                           animation="border"
